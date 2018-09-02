@@ -21,7 +21,6 @@ function request(access_token, url, requestOptions, options) {
   requestOptions = {
     method: requestOptions.method || 'get' , // http method
     onResponse: requestOptions.onResponse || new Function, // callback on response
-    form: requestOptions.form || null // Form
   };
   /** combine options */
   options = Object.assign({ access_token }, options);

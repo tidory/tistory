@@ -1,6 +1,6 @@
 {
   "name": "tistory",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "tistory api for client side",
   "main": "index.js",
   "scripts": {

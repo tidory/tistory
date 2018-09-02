@@ -42,6 +42,8 @@ if(location.hash) {
 
 # Methods
 
+<https://www.tistory.com/guide/api/index>
+
 ## Parameters
 
 * options: object - Tistory api request parameters
