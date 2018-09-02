@@ -1,0 +1,22 @@
+{
+  "name": "tistory",
+  "version": "1.0.0",
+  "description": "tistory api for client side",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pronist/tistory.git"
+  },
+  "keywords": [
+    "tistory"
+  ],
+  "author": "Mansu Jeong <pronist@naver.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pronist/tistory/issues"
+  },
+  "homepage": "https://github.com/pronist/tistory#readme"
+}
