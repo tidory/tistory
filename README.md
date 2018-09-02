@@ -10,11 +10,50 @@ with **Node.js**
 npm install --save tistory
 ```
 
+with **Bower**
+
+```bash
+bower install tistory --save
+```
+
 # Basic usage
 
 ```html
 <button id="request">Request</button>
 ```
+
+with **bower**
+
+```html
+<body>
+  <script src="bower_components/tistory/dist/tistory.min.js"></script>
+  <script>
+    if(location.hash) {
+      const 
+        access_token = location.hash
+          .split('#access_token=')[1]
+          .split('&')[0],
+        api = tistory(access_token)
+      ;
+      const api = Tistory(access_token);
+
+      let reqeust = document.getElementById('request');
+      reqeust.addEventListener('click', () => {
+        api.post.list({
+          blogName: 'example',
+          output: 'json'
+        }, (request) => {
+          /** https://www.w3schools.com/js/js_ajax_http.asp */
+          console.log(request.responseText);
+        });
+      });
+    }
+  </script>
+</body>
+```
+
+
+with **Bundlers**
 
 ```javascript
 const 
@@ -27,6 +66,7 @@ if(location.hash) {
       .split('&')[0],
     api = tistory(access_token)
   ;
+
   let reqeust = document.getElementById('request');
   reqeust.addEventListener('click', () => {
     api.post.list({
@@ -112,7 +152,7 @@ api.__CATEGORY__.__METHOD__({
 ```html
 <!-- File Upload -->
 <form method="POST" enctype="multipart/form-data" id="upload_form">
-  <input type="hidden" name="blogName" value="__BLOG_NAME">
+  <input type="hidden" name="blogName" value="__BLOG_NAME__">
   <input type="file" name="uploadedfile">
   <input type="submit">
 </form>

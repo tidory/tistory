@@ -1,0 +1,21 @@
+{
+  "name": "tistory",
+  "description": "tistory api for client side",
+  "main": "dist/tistory.js",
+  "authors": [
+    "Mansu Jeong <pronist@naver.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "tistory"
+  ],
+  "homepage": "https://github.com/pronist/tistory",
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "src",
+    "index.js"
+  ]
+}
