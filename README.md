@@ -33,9 +33,8 @@ with **bower**
         access_token = location.hash
           .split('#access_token=')[1]
           .split('&')[0],
-        api = tistory(access_token)
+        api = Tistory(access_token)
       ;
-      const api = Tistory(access_token);
 
       let reqeust = document.getElementById('request');
       reqeust.addEventListener('click', () => {
