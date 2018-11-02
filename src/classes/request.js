@@ -23,11 +23,25 @@ function request(access_token, url, requestOptions, options) {
     onResponse: requestOptions.onResponse || new Function, // callback on response
   };
   /** combine options */
-  options = Object.assign({ access_token }, options);
-
+  options = Object.assign({ 
+    'access_token': access_token,
+    'output': 'json'
+  }, options);
   /** XMLHttpRequest Events */
   xhr.addEventListener('load', function(aEvt) {
-    return requestOptions.onResponse(xhr, aEvt);
+    let response = JSON.parse(xhr.responseText);
+    switch(requestOptions.method) {
+      case 'get':
+        return requestOptions.onResponse(response.tistory.item);
+      case 'post':
+        let result = {};
+        Object.keys(response.tistory).map(function(key) {
+          if(key != 'status') {
+            result[key] = response.tistory[key]; 
+          }
+        });
+        return requestOptions.onResponse(result);
+    }
   });
   
   /** form? */
@@ -35,7 +49,7 @@ function request(access_token, url, requestOptions, options) {
     /** request */
     xhr.open(requestOptions.method, 
       requestOptions.method == 'get'
-        ? requestUrl + `?access_token=${access_token}&` + serialize(options.form)
+        ? requestUrl + `?access_token=${access_token}&output=json&` + serialize(options.form)
         : requestUrl
     , true);
     if(requestOptions.method == 'post') {
@@ -45,6 +59,7 @@ function request(access_token, url, requestOptions, options) {
       ;
       /** add access_toekn to form */
       formData.append('access_token', access_token);
+      formData.append('output', 'json');
     }
     /** send */
     xhr.send(requestOptions.method == 'get'

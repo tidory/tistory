@@ -1,6 +1,4 @@
-const
-  request = require('../classes/request')
-;
+const request = require('../classes/request');
 
 /**
  * convert to API Object
@@ -15,7 +13,7 @@ function convertToApiObject(access_token, configs) {
   Object.keys(configs).forEach(function(key) {
     eval(`apis.${key} = new Object()`);
     Object.keys(eval(`configs.${key}`)).forEach(function(service) {
-      eval(`apis.${key}.${service} = function(options = {}, callback = new Function()) {
+      eval(`apis.${key}.${service} = function(callback = new Function(), options = {}) {
         request(access_token, "/${key}/${service}", new Object({
           method: configs.${key}.${service}.method,
           onResponse: callback
@@ -33,7 +31,7 @@ function convertToApiObject(access_token, configs) {
  * 
  * @return {Object}
  */
-function Tistory(access_token) {
+function tistory(access_token) {
   let configs = new Object({
     /** 티스토리 블로그 API */
     blog: {
@@ -51,9 +49,7 @@ function Tistory(access_token) {
       /** 글 읽기 API */
       read:   { method: 'get' },
       /** 파일 첨부 API */
-      attach: { method: 'post' },
-      /** 글 삭제 API */
-      delete: { method: 'post'}
+      attach: { method: 'post' }
     },
     /** 티스토리 카테고리 API */
     category: {
@@ -72,20 +68,9 @@ function Tistory(access_token) {
       modify: { method: 'post' },
       /** 댓글 삭제 API */
       delete: { method: 'post' }
-    },
-    /** 티스토리 방명록 API */
-    guestbook: {
-      /** 방명록 목록 API */
-      list:   { method: 'get' },
-      /** 방명록 작성 API */
-      write:  { method: 'post' },
-      /** 방명록 수정 API */
-      modify: { method: 'post' },
-      /** 방명록 삭제 API */
-      delete: { method: 'post' }
     }
   });
   return convertToApiObject(access_token, configs);
 }
 
-module.exports = Tistory;
+module.exports = tistory;

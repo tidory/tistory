@@ -32,62 +32,77 @@ const
  * @param {Object} options - params
  */
 function request(access_token, url, requestOptions, options) {
-  const 
-    xhr = new XMLHttpRequest(),
-    requestUrl = baseUrl + url
-  ;
-  /** default */
-  requestOptions = {
-    method: requestOptions.method || 'get' , // http method
-    onResponse: requestOptions.onResponse || new Function, // callback on response
-  };
-  /** combine options */
-  options = Object.assign({ access_token }, options);
-
-  /** XMLHttpRequest Events */
-  xhr.addEventListener('load', function(aEvt) {
-    return requestOptions.onResponse(xhr, aEvt);
-  });
-  
-  /** form? */
-  if(options.form !== undefined && options.form) {
-    /** request */
-    xhr.open(requestOptions.method, 
-      requestOptions.method == 'get'
-        ? requestUrl + `?access_token=${access_token}&` + serialize(options.form)
-        : requestUrl
-    , true);
-    if(requestOptions.method == 'post') {
-      /** formData: Function Scope */
-      var 
-        formData = new FormData(options.form)
-      ;
-      /** add access_toekn to form */
-      formData.append('access_token', access_token);
-    }
-    /** send */
-    xhr.send(requestOptions.method == 'get'
-      ? null
-      : formData
-    );
-  }
-  else {
-    /** request */
-    xhr.open(requestOptions.method, 
-      requestOptions.method == 'get'
-        ? requestUrl + '?' + util.httpBuildQuery(options)
-        : requestUrl
-    , true);
-    /** set request header */
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    /** send */
-    xhr.send(
-      requestOptions.method == 'get'
+    const 
+      xhr = new XMLHttpRequest(),
+      requestUrl = baseUrl + url
+    ;
+    /** default */
+    requestOptions = {
+      method: requestOptions.method || 'get' , // http method
+      onResponse: requestOptions.onResponse || new Function, // callback on response
+    };
+    /** combine options */
+    options = Object.assign({ 
+      'access_token': access_token,
+      'output': 'json'
+    }, options);
+    /** XMLHttpRequest Events */
+    xhr.addEventListener('load', function(aEvt) {
+      let response = JSON.parse(xhr.responseText);
+      switch(requestOptions.method) {
+        case 'get':
+          return requestOptions.onResponse(response.tistory.item);
+        case 'post':
+          let result = {};
+          Object.keys(response.tistory).map(function(key) {
+            if(key != 'status') {
+              result[key] = response.tistory[key]; 
+            }
+          });
+          return requestOptions.onResponse(result);
+      }
+    });
+    
+    /** form? */
+    if(options.form !== undefined && options.form) {
+      /** request */
+      xhr.open(requestOptions.method, 
+        requestOptions.method == 'get'
+          ? requestUrl + `?access_token=${access_token}&output=json&` + serialize(options.form)
+          : requestUrl
+      , true);
+      if(requestOptions.method == 'post') {
+        /** formData: Function Scope */
+        var 
+          formData = new FormData(options.form)
+        ;
+        /** add access_toekn to form */
+        formData.append('access_token', access_token);
+        formData.append('output', 'json');
+      }
+      /** send */
+      xhr.send(requestOptions.method == 'get'
         ? null
-        : util.httpBuildQuery(options)
-    );
+        : formData
+      );
+    }
+    else {
+      /** request */
+      xhr.open(requestOptions.method, 
+        requestOptions.method == 'get'
+          ? requestUrl + '?' + util.httpBuildQuery(options)
+          : requestUrl
+      , true);
+      /** set request header */
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      /** send */
+      xhr.send(
+        requestOptions.method == 'get'
+          ? null
+          : util.httpBuildQuery(options)
+      );
+    }
   }
-}
 
 /**
  * convert to API Object
@@ -98,20 +113,20 @@ function request(access_token, url, requestOptions, options) {
  * @return {Object}
  */
 function convertToApiObject(access_token, configs) {
-  let apis = new Object();
-  Object.keys(configs).forEach(function(key) {
-    eval(`apis.${key} = new Object()`);
-    Object.keys(eval(`configs.${key}`)).forEach(function(service) {
-      eval(`apis.${key}.${service} = function(options = {}, callback = new Function()) {
-        request(access_token, "/${key}/${service}", new Object({
-          method: configs.${key}.${service}.method,
-          onResponse: callback
-        }), options)
-      };`);
+    let apis = new Object();
+    Object.keys(configs).forEach(function(key) {
+      eval(`apis.${key} = new Object()`);
+      Object.keys(eval(`configs.${key}`)).forEach(function(service) {
+        eval(`apis.${key}.${service} = function(callback = new Function(), options = {}) {
+          request(access_token, "/${key}/${service}", new Object({
+            method: configs.${key}.${service}.method,
+            onResponse: callback
+          }), options)
+        };`);
+      });
     });
-  });
-  return apis;
-}
+    return apis;
+  }
 
 /**
  * return Tistory API Object
@@ -120,60 +135,47 @@ function convertToApiObject(access_token, configs) {
  * 
  * @return {Object}
  */
-function Tistory(access_token) {
-  let configs = new Object({
-    /** 티스토리 블로그 API */
-    blog: {
-      /** 블로그 정보 API */
-      info:   { method: 'get' }
-    },
-    /** 티스토리 게시글 API */
-    post: {
-      /** 최근 게시글 목록 API */
-      list:   { method: 'get' },
-      /** 게시글 작성하기 API */
-      write:  { method: 'post' },
-      /** 게시글 수정하기 API */
-      modify: { method: 'post' },
-      /** 글 읽기 API */
-      read:   { method: 'get' },
-      /** 파일 첨부 API */
-      attach: { method: 'post' },
-      /** 글 삭제 API */
-      delete: { method: 'post'}
-    },
-    /** 티스토리 카테고리 API */
-    category: {
-      /** 카테고리 목록 API */
-      list:   { method: 'get' }
-    },
-    /** 티스토리 댓글 API */
-    comment: {
-      /** 게시글 댓글 목록 API */
-      list:   { method: 'get' },
-      /** 최근 댓글 목록 API */
-      newest: { method: 'get' },
-      /** 댓글 작성 API */
-      write:  { method: 'post' },
-      /** 댓글 수정 API */
-      modify: { method: 'post' },
-      /** 댓글 삭제 API */
-      delete: { method: 'post' }
-    },
-    /** 티스토리 방명록 API */
-    guestbook: {
-      /** 방명록 목록 API */
-      list:   { method: 'get' },
-      /** 방명록 작성 API */
-      write:  { method: 'post' },
-      /** 방명록 수정 API */
-      modify: { method: 'post' },
-      /** 방명록 삭제 API */
-      delete: { method: 'post' }
-    }
-  });
-  return convertToApiObject(access_token, configs);
-}
+function tistory(access_token) {
+    let configs = new Object({
+      /** 티스토리 블로그 API */
+      blog: {
+        /** 블로그 정보 API */
+        info:   { method: 'get' }
+      },
+      /** 티스토리 게시글 API */
+      post: {
+        /** 최근 게시글 목록 API */
+        list:   { method: 'get' },
+        /** 게시글 작성하기 API */
+        write:  { method: 'post' },
+        /** 게시글 수정하기 API */
+        modify: { method: 'post' },
+        /** 글 읽기 API */
+        read:   { method: 'get' },
+        /** 파일 첨부 API */
+        attach: { method: 'post' }
+      },
+      /** 티스토리 카테고리 API */
+      category: {
+        /** 카테고리 목록 API */
+        list:   { method: 'get' }
+      },
+      /** 티스토리 댓글 API */
+      comment: {
+        /** 게시글 댓글 목록 API */
+        list:   { method: 'get' },
+        /** 최근 댓글 목록 API */
+        newest: { method: 'get' },
+        /** 댓글 작성 API */
+        write:  { method: 'post' },
+        /** 댓글 수정 API */
+        modify: { method: 'post' },
+        /** 댓글 삭제 API */
+        delete: { method: 'post' }
+      }
+    });
+    return convertToApiObject(access_token, configs);
+  }
 
 // get successful control from form and assemble into object
 // http://www.w3.org/TR/html401/interact/forms.html#h-17.13.2

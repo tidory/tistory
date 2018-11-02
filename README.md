@@ -4,60 +4,38 @@ Tistory API for **Client Side**
 
 # Installation
 
-with **Node.js**
-
-```bash
-npm install --save tistory
-```
-
-with **Bower**
+### Bower
 
 ```bash
 bower install tistory --save
 ```
 
-# Basic usage
+### Node.js
+
+```bash
+npm install --save tistory
+```
+
+# Includes
+
+```html
+<body>
+  <script src="bower_components/tistory/dist/tistory.min.js"></script>
+</body>
+```
+or,
+
+```javascript
+const tistory = require('tistory');
+```
+
+# Getting Started
 
 ```html
 <button id="request">Request</button>
 ```
 
-with **bower**
-
-```html
-<body>
-  <script src="bower_components/tistory/dist/tistory.min.js"></script>
-  <script>
-    if(location.hash) {
-      const 
-        access_token = location.hash
-          .split('#access_token=')[1]
-          .split('&')[0],
-        api = Tistory(access_token)
-      ;
-
-      let reqeust = document.getElementById('request');
-      reqeust.addEventListener('click', () => {
-        api.post.list({
-          blogName: 'example',
-          output: 'json'
-        }, (request) => {
-          /** https://www.w3schools.com/js/js_ajax_http.asp */
-          console.log(request.responseText);
-        });
-      });
-    }
-  </script>
-</body>
-```
-
-
-with **Bundlers**
-
 ```javascript
-const 
-  tistory = require('tistory')
-;
 if(location.hash) {
   const 
     access_token = location.hash
@@ -67,86 +45,69 @@ if(location.hash) {
   ;
 
   let reqeust = document.getElementById('request');
+
   reqeust.addEventListener('click', () => {
-    api.post.list({
-      blogName: 'example',
-      output: 'json'
-    }, (request) => {
-      /** https://www.w3schools.com/js/js_ajax_http.asp */
-      console.log(request.responseText);
-    });
+    api.post.list((post) => {
+      console.log(post.totalCount);
+    }, { blogName: '__BLOG_NAME__' });
   });
 }
 ```
 
 # Methods
 
-<https://www.tistory.com/guide/api/index>
+### Parameters
 
-## Parameters
-
-* options: object - Tistory api request parameters
 * callback: Function - the function that will be called after request
+* options: object - Tistory api request parameters
 
-## Usage
+### Usage
 
 ```javascript
 const api = tistory(access_token);
 
-api.__CATEGORY__.__METHOD__({
-  /** Reqeust Options */
-}, (request, aEvt) => {
+api.__CATEGORY__.__METHOD__((response) => {
   /** XMLHttpRequest.onload */
+}, {
+  /** Reqeust Options */
 })
 ```
 
-## Categories
+### blog
 
-### Tistory.blog
+|Name|description|
+-----|-----------|
+|**blog.info(callback = new Function(), options = {})**| Getting Tistory blog info
 
-#### Methods
+### category
 
-* Tistory.blog.info
+|Name|description|
+-----|-----------|
+|**category.list(callback = new Function(), options = {})**| Getting Tistory category list
 
-### Tistory.post
+### comment
 
-#### Methods
+|Name|description|
+-----|-----------|
+|**comment.newest(callback = new Function(), options = {})**| Getting newest comments
+|**comment.list(callback = new Function(), options = {})**| Getting comments list
+|**comment.write(callback = new Function(), options = {})**| Writing a comment
+|**comment.modify(callback = new Function(), options = {})**| Modifying a comment
+|**comment.delete(callback = new Function(), options = {})**| Deleting a comment
 
-* Tistory.post.list
-* Tistory.post.write
-* Tistory.post.modify
-* Tistory.post.read
-* Tistory.post.attach
-* Tistory.post.delete
+### post
 
-### Tistory.category
-
-#### Methods
-
-* Tistory.category.list
-
-### Tistory.comment
-
-#### Methods
-
-* Tistory.comment.list
-* Tistory.comment.newest
-* Tistory.comment.write
-* Tistory.comment.modify
-* Tistory.comment.delete
-
-### Tistory.guestbook
-
-#### Methods
-
-* Tistory.guestbook.list
-* Tistory.guestbook.write
-* Tistory.guestbook.modify
-* Tistory.guestbook.delete
+|Name|description|
+-----|-----------|
+|**post.list(callback = new Function(), options = {})**| Getting posts list
+|**post.read(callback = new Function(),options = {})**| Reading a post
+|**post.write(callback = new Function(), options = {})**| Writing a post
+|**post.modify(callback = new Function(), options = {})**| Modifying a post
+|**post.attach(callback = new Function(), options = {})**| Attaching a file
 
 # Form Request
 
-## post
+### post
 
 ```html
 <!-- File Upload -->
@@ -159,40 +120,35 @@ api.__CATEGORY__.__METHOD__({
 
 ```javascript
 let uploadForm = document.getElementById('upload_form');
+
 uploadForm.addEventListener('submit', (e) => {
   e.preventDefault();
-  api.post.attach({
-    form: uploadForm
-  }, (request) => {
-    console.log(request.responseText);
-  });
+  api.post.attach((file) => {
+    console.log(file.url);
+  }, { form: uploadForm });
 });
 ```
 
-## get
+### get
 
 ```html
 <form method="GET" action="/" id="form_request">
   <input type="text" name="blogName" value="__BLOG_NAME__">
-  <input type="hidden" name="output" value="json">
   <input type="submit">
 </form>
 ```
 
 ```javascript
 let form = document.getElementById('form_request');
+
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  api.post.list({
-    form: form
-  }, (request) => {
-    console.log(request.responseText);
-  });
+  api.post.list((post) => {
+    console.log(post.totalCount);
+  }, { form: form });
 });
 ```
 
-# License
+# Reference
 
-MIT
-
-Copyright (c) Mansu Jeong. All rights reserved.
+<https://tistory.github.io/document-tistory-apis/>
