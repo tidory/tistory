@@ -2,7 +2,7 @@
   "name": "tistory",
   "unpkg": "dist/tistory.js",
   "jsdelivr": "dist/tistory.js",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Tistory API",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,12 @@
   ],
   "author": "Mansu Jeong <pronist@naver.com>",
   "license": "MIT",
+  "files": [
+    "src",
+    "index.js",
+    "LICENSE",
+    "README.md"
+  ],
   "bugs": {
     "url": "https://github.com/pronist/tistory/issues"
   },
