@@ -1,6 +1,6 @@
 {
   "name": "tistory",
-  "description": "tistory api for client side",
+  "description": "Tistory API",
   "main": "dist/tistory.js",
   "authors": [
     "Mansu Jeong <pronist@naver.com>"
@@ -12,9 +12,6 @@
   "homepage": "https://github.com/pronist/tistory",
   "ignore": [
     "node_modules",
-    "bower_components",
-    "test",
-    "tests",
     "src",
     "index.js"
   ]

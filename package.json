@@ -1,10 +1,12 @@
 {
   "name": "tistory",
-  "version": "1.1.0",
-  "description": "tistory api for client side",
+  "unpkg": "dist/tistory.js",
+  "jsdelivr": "dist/tistory.js",
+  "version": "2.0.0",
+  "description": "Tistory API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node ./node_modules/webpack/bin/webpack"
   },
   "repository": {
     "type": "git",
@@ -18,5 +20,18 @@
   "bugs": {
     "url": "https://github.com/pronist/tistory/issues"
   },
-  "homepage": "https://github.com/pronist/tistory#readme"
+  "homepage": "https://github.com/pronist/tistory#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "form-serialize": "^0.7.2",
+    "query-string": "^6.2.0",
+    "form-data": "^2.3.3"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^1.0.0",
+    "html-webpack-plugin": "^3.2.0",
+    "uglifyjs-webpack-plugin": "^1.3.0",
+    "webpack": "^3.12.0",
+    "webpack-dev-server": "^2.11.3"
+  }
 }

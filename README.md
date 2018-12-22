@@ -1,6 +1,6 @@
 # tistory
 
-Tistory API for **Client Side**
+**Javascript** Tistory API package, Support **Node.js**, and **Browser**
 
 # Installation
 
@@ -18,12 +18,21 @@ npm install --save tistory
 
 # Includes
 
+with **bower**
+
 ```html
 <body>
-  <script src="bower_components/tistory/dist/tistory.min.js"></script>
+  <script src="bower_components/tistory/dist/tistory.js"></script>
 </body>
 ```
-or,
+
+or **cdn**
+
+```html
+<script src="https://unpkg.com/tistory"></script>
+```
+
+with **Node.js**
 
 ```javascript
 const tistory = require('tistory');
@@ -31,79 +40,126 @@ const tistory = require('tistory');
 
 # Getting Started
 
-```html
-<button id="request">Request</button>
-```
+### with Browser
 
 ```javascript
 if(location.hash) {
-  const 
-    access_token = location.hash
-      .split('#access_token=')[1]
-      .split('&')[0],
-    api = tistory(access_token)
+  const access_token = location.hash
+    .split('#access_token=')[1]
+    .split('&')[0],
   ;
-
-  let reqeust = document.getElementById('request');
-
-  reqeust.addEventListener('click', () => {
-    api.post.list((post) => {
-      console.log(post.totalCount);
-    }, { blogName: '__BLOG_NAME__' });
-  });
+  /** Getting Tistory Blog Info */
+  Tistory.blog.info(access_token).then(({ data }) => {
+    console.log(data);
+  })
+}
+else {
+  location.href = Tistory.auth.getPermissionUrl(
+      '__TISTORY_CLIENT_ID__', 
+      '__TISTORY_CALLBACK__',
+      'token'
+  );
 }
 ```
 
-# Methods
+### with Node.js
 
-### Parameters
+```javascript
 
-* callback: Function - the function that will be called after request
+const Tistory = require('tistory');
+
+const http = require('http'),
+      url = require('url')
+;
+http.createServer(async function(req, res) {
+  let code = url.parse(req.url, true).query.code;
+  if(code) {
+    /** Getting access token */
+    let response = await Tistory.auth.getAccessToken(
+      '__TISTORY_CLIENT_ID__',
+      '__TISTORY_CLIENT_SECRET__',
+      '__TISTORY_CALLBACK__',
+      code
+    );
+    let access_token = response.data.access_token;
+    /** Getting Tistory Blog Info */
+    Tistory.blog.info(access_token).then(({ data }) => {
+      console.log(data);
+    });
+  }
+  else {
+    res.writeHead(302, {
+      'Location': Tistory.auth.getPermissionUrl(
+        '__TISTORY_CLIENT_ID__', 
+        '__TISTORY_CALLBACK__', 
+        'code'
+    )});
+  }
+}).listen(80);
+```
+
+# Authentication
+
+### Tistory.auth.getPermissionUrl(clientId, redirectUri, responseType, state = null): string
+
+Return tistory permission Url for **Authorization**
+
+### Tistory.auth.getAccessToken(clientId, clientSecret, redirectUri, code): AxiosPromise
+
+Request ```https://www.tistory.com/oauth/access_token```
+
+# Tistory API
+
+### Tistory.__CATEGORY__.__METHOD__(access_token, options = {}): AxiosPromise
+
+* access_token: string - Tistory Access Token
 * options: object - Tistory api request parameters
 
 ### Usage
 
 ```javascript
-const api = tistory(access_token);
-
-api.__CATEGORY__.__METHOD__((response) => {
-  /** XMLHttpRequest.onload */
-}, {
-  /** Reqeust Options */
+Tistory.__CATEGORY__.__METHOD__(access_token, {
+  /** Request Options */
 })
+.then(({ data }) => {
+  /** ... */
+})
+.catch((e) => {
+  /** ... */
+});
 ```
 
 ### blog
 
 |Name|description|
 -----|-----------|
-|**blog.info(callback = new Function(), options = {})**| Getting Tistory blog info
+|**blog.info(access_token, options = {})**| Getting Tistory blog info
 
 ### category
 
 |Name|description|
 -----|-----------|
-|**category.list(callback = new Function(), options = {})**| Getting Tistory category list
+|**category.list(access_token, options = {})**| Getting Tistory category list
 
 ### comment
 
 |Name|description|
 -----|-----------|
-|**comment.newest(callback = new Function(), options = {})**| Getting newest comments
-|**comment.list(callback = new Function(), options = {})**| Getting comments list
-|**comment.write(callback = new Function(), options = {})**| Writing a comment
-|**comment.modify(callback = new Function(), options = {})**| Modifying a comment
-|**comment.delete(callback = new Function(), options = {})**| Deleting a comment
+|**comment.newest(access_token, options = {})**| Getting newest comments
+|**comment.list(access_token, options = {})**| Getting comments list
+|**comment.write(access_token, options = {})**| Writing a comment
+|**comment.modify(access_token, options = {})**| Modifying a comment
+|**comment.delete(access_token, options = {})**| Deleting a comment
 
 ### post
 
 |Name|description|
 -----|-----------|
-|**post.list(callback = new Function(), options = {})**| Getting posts list
-|**post.read(callback = new Function(),options = {})**| Reading a post
-|**post.write(callback = new Function(), options = {})**| Writing a post
-|**post.modify(callback = new Function(), options = {})**| Modifying a post
-|**post.attach(callback = new Function(), options = {})**| Attaching a file
+|**post.list(access_token, options = {})**| Getting posts list
+|**post.read(access_token,options = {})**| Reading a post
+|**post.write(access_token, options = {})**| Writing a post
+|**post.modify(access_token, options = {})**| Modifying a post
+|**post.attach(access_token, options = {})**| Attaching a file
 
 # Form Request
 
@@ -111,29 +167,9 @@ api.__CATEGORY__.__METHOD__((response) => {
 
 ```html
 <!-- File Upload -->
-<form method="POST" enctype="multipart/form-data" id="upload_form">
+<form id="form_request">
   <input type="hidden" name="blogName" value="__BLOG_NAME__">
   <input type="file" name="uploadedfile">
-  <input type="submit">
-</form>
-```
-
-```javascript
-let uploadForm = document.getElementById('upload_form');
-
-uploadForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  api.post.attach((file) => {
-    console.log(file.url);
-  }, { form: uploadForm });
-});
-```
-
-### get
-
-```html
-<form method="GET" action="/" id="form_request">
-  <input type="text" name="blogName" value="__BLOG_NAME__">
   <input type="submit">
 </form>
 ```
@@ -143,9 +179,10 @@ let form = document.getElementById('form_request');
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
-  api.post.list((post) => {
-    console.log(post.totalCount);
-  }, { form: form });
+
+  Tistory.post.attach(access_token, form).then(({ data }) => {
+    console.log(data);
+  });
 });
 ```
 
