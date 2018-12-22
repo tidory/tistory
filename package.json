@@ -18,6 +18,7 @@
   "author": "Mansu Jeong <pronist@naver.com>",
   "license": "MIT",
   "files": [
+    "dist",
     "src",
     "index.js",
     "LICENSE",
