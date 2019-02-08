@@ -46,7 +46,7 @@ const tistory = require('tistory');
 if(location.hash) {
   const access_token = location.hash
     .split('#access_token=')[1]
-    .split('&')[0],
+    .split('&')[0]
   ;
   /** Getting Tistory Blog Info */
   Tistory.blog.info(access_token).then(({ data }) => {
@@ -95,6 +95,7 @@ http.createServer(async function(req, res) {
         'code'
     )});
   }
+  res.end();
 }).listen(80);
 ```
 
@@ -162,8 +163,6 @@ Tistory.__CATEGORY__.__METHOD__(access_token, {
 |**post.attach(access_token, options = {})**| Attaching a file
 
 # Form Request
-
-### post
 
 ```html
 <!-- File Upload -->

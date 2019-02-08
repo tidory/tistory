@@ -85,12 +85,9 @@ const Tistory = {
   }
 };
 
-try {
-  /** only for Browser */
-  if(window !== undefined && window) {
-    window.Tistory = Tistory;
-  }
+/** only for Browser */
+if(typeof window !== 'undefined' && window) {
+  window.Tistory = Tistory;
 }
-catch(e) {
-  module.exports = Tistory;
-}
+
+module.exports = Tistory;
