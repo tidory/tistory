@@ -24,7 +24,6 @@ Request.get = function(access_token, url, options) {
       'output': 'json'
     }, options)
   })
-  .catch(function(e) { console.log(e) });
 }
 
 /**
@@ -40,7 +39,7 @@ Request.post = function(access_token, url, options) {
       url,
       data, 
       axiosConfig
-    ).catch(function(e) { console.log(e) });
+    )
   }
   const form = function() {
     let formData = null;
