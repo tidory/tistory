@@ -3,7 +3,7 @@ const axios = require('axios'),
       Request = require('./src/request')
 ;
 
-const Tistory = {
+const tistory = {
   auth: {
     /** 티스토리 권한 요청 */
     getPermissionUrl(clientId, redirectUri, responseType, state = null) {
@@ -87,7 +87,7 @@ const Tistory = {
 
 /** only for Browser */
 if(typeof window !== 'undefined' && window) {
-  window.Tistory = Tistory;
+  window.tistory = tistory;
 }
 
-module.exports = Tistory;
+module.exports = tistory;

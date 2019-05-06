@@ -1,6 +1,6 @@
 {
   "name": "tistory",
-  "description": "Tistory API",
+  "description": "Javascript Tistory API package, Support Node.js, and Browser",
   "main": "dist/tistory.js",
   "authors": [
     "Mansu Jeong <pronist@naver.com>"
@@ -9,7 +9,7 @@
   "keywords": [
     "tistory"
   ],
-  "homepage": "https://github.com/pronist/tistory",
+  "homepage": "https://github.com/tidory/tistory",
   "ignore": [
     "node_modules",
     "src",

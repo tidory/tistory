@@ -2,15 +2,15 @@
   "name": "tistory",
   "unpkg": "dist/tistory.js",
   "jsdelivr": "dist/tistory.js",
-  "version": "2.1.0",
-  "description": "Tistory API",
+  "version": "2.2.0",
+  "description": "Javascript Tistory API package, Support Node.js, and Browser",
   "main": "index.js",
   "scripts": {
     "build": "node ./node_modules/webpack/bin/webpack"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pronist/tistory.git"
+    "url": "git+https://github.com/tidory/tistory.git"
   },
   "keywords": [
     "tistory"
@@ -25,9 +25,9 @@
     "README.md"
   ],
   "bugs": {
-    "url": "https://github.com/pronist/tistory/issues"
+    "url": "https://github.com/tidory/tistory/issues"
   },
-  "homepage": "https://github.com/pronist/tistory#readme",
+  "homepage": "https://github.com/tidory/tistory#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "form-data": "^2.3.3",

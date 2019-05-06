@@ -49,12 +49,12 @@ if(location.hash) {
     .split('&')[0]
   ;
   /** Getting Tistory Blog Info */
-  Tistory.blog.info(access_token).then(({ data }) => {
+  tistory.blog.info(access_token).then(({ data }) => {
     console.log(data);
   })
 }
 else {
-  location.href = Tistory.auth.getPermissionUrl(
+  location.href = tistory.auth.getPermissionUrl(
       '__TISTORY_CLIENT_ID__', 
       '__TISTORY_CALLBACK__',
       'token'
@@ -66,7 +66,7 @@ else {
 
 ```javascript
 
-const Tistory = require('tistory');
+const tistory = require('tistory');
 
 const http = require('http'),
       url = require('url')
@@ -75,7 +75,7 @@ http.createServer(async function(req, res) {
   let code = url.parse(req.url, true).query.code;
   if(code) {
     /** Getting access token */
-    let response = await Tistory.auth.getAccessToken(
+    let response = await tistory.auth.getAccessToken(
       '__TISTORY_CLIENT_ID__',
       '__TISTORY_CLIENT_SECRET__',
       '__TISTORY_CALLBACK__',
@@ -83,13 +83,13 @@ http.createServer(async function(req, res) {
     );
     let access_token = response.data.access_token;
     /** Getting Tistory Blog Info */
-    Tistory.blog.info(access_token).then(({ data }) => {
+    tistory.blog.info(access_token).then(({ data }) => {
       console.log(data);
     });
   }
   else {
     res.writeHead(302, {
-      'Location': Tistory.auth.getPermissionUrl(
+      'Location': tistory.auth.getPermissionUrl(
         '__TISTORY_CLIENT_ID__', 
         '__TISTORY_CALLBACK__', 
         'code'
@@ -101,68 +101,217 @@ http.createServer(async function(req, res) {
 
 # Authentication
 
-### Tistory.auth.getPermissionUrl(clientId, redirectUri, responseType, state = null): string
+### tistory.auth.getPermissionUrl(clientId: string, redirectUri: string, responseType: string, state: string = null)
 
 Return tistory permission Url for **Authorization**
 
-### Tistory.auth.getAccessToken(clientId, clientSecret, redirectUri, code): AxiosPromise
+#### Parameters
+
+* clientId: Tistory API client id
+* redirectUri: Tistory API redirect uri
+* responseType: 'code', or 'token'
+* state: CSRF Token
+
+#### Usage
+
+```javascript
+let redirectUrl = tistory.auth.getPermissionUrl(
+  '__TISTORY_CLIENT_ID__', 
+  '__TISTORY_CALLBACK__',
+  'code'
+);
+```
+
+### tistory.auth.getAccessToken(clientId: string, clientSecret: string, redirectUri: string, code: string)
 
 Request ```https://www.tistory.com/oauth/access_token```
 
-# Tistory API
+#### Parameters
 
-### Tistory.__CATEGORY__.__METHOD__(access_token, options = {}): AxiosPromise
+* clientId: Tistory API client id
+* clientSecret: Tistory API client secret
+* redirectUri: Tistory API redirect uri
+* code: Access Token request code
 
-* access_token: string - Tistory Access Token
-* options: object - Tistory api request parameters
-
-### Usage
+#### Usage
 
 ```javascript
-Tistory.__CATEGORY__.__METHOD__(access_token, {
-  /** Request Options */
-})
-.then(({ data }) => {
-  /** ... */
-})
-.catch((e) => {
-  /** ... */
+let response = await tistory.auth.getAccessToken(
+  '__TISTORY_CLIENT_ID__',
+  '__TISTORY_CLIENT_SECRET__',
+  '__TISTORY_CALLBACK__',
+  code
+);
+```
+
+# Tistory API
+
+#### Parameters
+
+* access_token: Tistory Access Token
+* options: Tistory API request parameters
+
+### tistory.blog.info(access_token: string, options: object = {})
+
+Getting tistory blog info
+
+#### Usage
+
+```javascript
+let response = await tistory.blog.info(access_token);
+```
+
+### tistory.category.list(access_token: string, options: object = {})
+
+Getting Tistory category list
+
+#### Usage
+
+```javascript
+let response = await tistory.category.list(access_token, {
+  blogName: 'example'
 });
 ```
 
-### blog
+### tistory.comment.newest(access_token: string, options: object = {})
 
-|Name|description|
------|-----------|
-|**blog.info(access_token, options = {})**| Getting Tistory blog info
+Getting newest comments
 
-### category
+#### Usage
 
-|Name|description|
------|-----------|
-|**category.list(access_token, options = {})**| Getting Tistory category list
+```javascript
+let response = await tistory.comment.newest(access_token, {
+  blogName: 'example',
+  page: '1',
+  count: '10'
+});
+```
 
-### comment
+### tistory.comment.list(access_token: string, options: object = {})
 
-|Name|description|
------|-----------|
-|**comment.newest(access_token, options = {})**| Getting newest comments
-|**comment.list(access_token, options = {})**| Getting comments list
-|**comment.write(access_token, options = {})**| Writing a comment
-|**comment.modify(access_token, options = {})**| Modifying a comment
-|**comment.delete(access_token, options = {})**| Deleting a comment
+Getting comments list
 
-### post
+#### Usage
 
-|Name|description|
------|-----------|
-|**post.list(access_token, options = {})**| Getting posts list
-|**post.read(access_token,options = {})**| Reading a post
-|**post.write(access_token, options = {})**| Writing a post
-|**post.modify(access_token, options = {})**| Modifying a post
-|**post.attach(access_token, options = {})**| Attaching a file
+```javascript
+let response = await tistory.comment.list(access_token, {
+  blogName: 'example',
+  postId: '1'
+});
+```
 
-# Form Request
+### tistory.comment.write(access_token, options: object = {})
+
+Writing a comment
+
+#### Usage
+
+```javascript
+let response = await tistory.comment.write(access_token, {
+  blogName: 'example',
+  postId: '1',
+  content: 'Hello, world!'
+});
+```
+
+### tistory.comment.modify(access_token: string, options: object = {})
+
+Modifying a comment
+
+#### Usage
+
+```javascript
+let response = await tistory.comment.modify(access_token, {
+  blogName: 'example',
+  postId: '1',
+  commentId: '1',
+  content: 'Hello, world!'
+});
+```
+
+### tistory.comment.delete(access_token: string, options: object = {})
+
+Deleting a comment
+
+#### Usage
+
+```javascript
+let response = await tistory.comment.delete(access_token, {
+  blogName: 'example',
+  postId: '1',
+  commentId: '1',
+});
+```
+
+### tistory.post.list(access_token: string, options: object = {})
+
+Getting posts list
+
+#### Usage
+
+```javascript
+let response = await tistory.post.list(access_token, {
+  blogName: 'example',
+  page: '1'
+});
+```
+
+### tistory.post.read(access_token: string, options: object = {})
+
+Reading a post
+
+#### Usage
+
+```javascript
+let response = await tistory.post.read(access_token, {
+  blogName: 'example',
+  postId: '1'
+});
+```
+
+### tistory.post.write(access_token: string, options: object = {})
+
+Writing a post
+
+#### Usage
+
+```javascript
+let response = await tistory.post.write(access_token, {
+  blogName: 'example',
+  title: 'Hello, world!'
+});
+```
+
+### tistory.post.modify(access_token: string, options: object = {})
+
+Modifying a post
+
+#### Usage
+
+```javascript
+let response = await tistory.post.modify(access_token, {
+  blogName: 'example',
+  postId: '1',
+  title: 'Hello, world!'
+})
+```
+
+### tistory.post.attach(access_token: string, options: object = {})
+
+Attaching a file
+
+#### Usage
+
+```javascript
+const fs = require('fs');
+
+let response = await tistory.post.attach(access_token, {
+  'blogName': 'example',
+  'uploadedfile': fs.createReadStream('preview.jpg')
+});
+```
+
+# with Form
 
 ```html
 <!-- File Upload -->
@@ -179,7 +328,7 @@ let form = document.getElementById('form_request');
 form.addEventListener('submit', (e) => {
   e.preventDefault();
 
-  Tistory.post.attach(access_token, form).then(({ data }) => {
+  tistory.post.attach(access_token, form).then(({ data }) => {
     console.log(data);
   });
 });
