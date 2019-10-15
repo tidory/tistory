@@ -2,7 +2,7 @@
   "name": "tistory",
   "unpkg": "dist/tistory.js",
   "jsdelivr": "dist/tistory.js",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Javascript Tistory API package, Support Node.js, and Browser",
   "main": "index.js",
   "scripts": {
