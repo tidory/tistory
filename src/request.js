@@ -10,7 +10,7 @@ function Request () {}
 /**
  * 'get' request
  *
- * @param {string} accessToken - Tistory accessToken
+ * @param {string} accessToken - Tistory Access Token
  * @param {string} url - Request url
  * @param {Object} options - Params
  */
@@ -26,7 +26,7 @@ Request.get = function (accessToken, url, options) {
 /**
  * 'post' request
  *
- * @param {string} accessToken - Tistory accessToken
+ * @param {string} accessToken - Tistory Access Token
  * @param {string} url - Request url
  * @param {Object} options - Params
  */

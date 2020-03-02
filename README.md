@@ -93,7 +93,7 @@ tistory.auth.getPermissionUrl(
 
 ### tistory.auth.getAccessToken(clientId: string, clientSecret: string, redirectUri: string, code: string)
 
-Request ```https://www.tistory.com/oauth/accessToken```
+Request ```https://www.tistory.com/oauth/access_token```
 
 * clientId: Tistory API client id
 * clientSecret: Tistory API client secret
