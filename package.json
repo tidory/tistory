@@ -2,11 +2,12 @@
   "name": "tistory",
   "unpkg": "dist/tistory.js",
   "jsdelivr": "dist/tistory.js",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Javascript Tistory API package, Support Node.js, and Browser",
   "main": "index.js",
   "scripts": {
-    "build": "node ./node_modules/webpack/bin/webpack"
+    "build": "node ./node_modules/webpack/bin/webpack",
+    "lint": "eslint --ext .js index.js src"
   },
   "repository": {
     "type": "git",
@@ -15,7 +16,6 @@
   "keywords": [
     "tistory"
   ],
-  "author": "Mansu Jeong <pronist@naver.com>",
   "license": "MIT",
   "files": [
     "dist",
@@ -24,10 +24,6 @@
     "LICENSE",
     "README.md"
   ],
-  "bugs": {
-    "url": "https://github.com/tidory/tistory/issues"
-  },
-  "homepage": "https://github.com/tidory/tistory#readme",
   "dependencies": {
     "axios": "^0.18.0",
     "form-data": "^2.3.3",
@@ -35,9 +31,15 @@
   },
   "devDependencies": {
     "clean-webpack-plugin": "^1.0.0",
-    "html-webpack-plugin": "^3.2.0",
     "uglifyjs-webpack-plugin": "^1.3.0",
     "webpack": "^3.12.0",
-    "webpack-dev-server": "^2.11.3"
+    "webpack-dev-server": "^2.11.3",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-loader": "^3.0.3",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   }
 }
