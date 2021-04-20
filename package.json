@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tidory/tistory.git"
+    "url": "git+https://github.com/tistory-project/tistory.js.git"
   },
   "keywords": [
     "tistory"
